@@ -6,15 +6,21 @@ export function notFoundHandler(req, res, next) {
 }
 
 export function errorHandler(err, req, res, next) {
-  console.error(err);
+  console.error("API ERROR:", {
+    message: err.message,
+    code: err.code,
+    detail: err.detail,
+    hint: err.hint,
+    stack: err.stack,
+  });
 
   const status = err.status || 500;
 
   res.status(status).json({
     success: false,
-    message:
-      process.env.NODE_ENV === "production" && status >= 500
-        ? "An unexpected server error occurred."
-        : err.message || "Internal server error",
+    message: err.message || "Internal server error",
+    code: err.code || undefined,
+    detail: err.detail || undefined,
+    hint: err.hint || undefined,
   });
 }
